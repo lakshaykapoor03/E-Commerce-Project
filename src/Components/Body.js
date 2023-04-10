@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react'
 
 const Body = () => {
     const [itemsList, setItemsList] = useState([])
+    const [filteredItemsList, setFilteredItemsList] = useState([])
     const [searchText, setSearchText] = useState("")
 
     const getItems =(async()=>{
         const data=  await fetch("https://fakestoreapi.com/products")
         const json = await data.json()
         setItemsList(json)
+        setFilteredItemsList(json)
+        console.log(json)
     })
 
     const searchItems = ((itemsList, searchText)=>{
@@ -20,25 +23,31 @@ const Body = () => {
    
     useEffect(()=>{
         getItems()
+        console.log("render")
     }, [])
 
   return (
    <>
    <div className="ml-[40%]">
    <input type="text" className="h-8 rounded outline-none text-black" placeholder='Search items...' value={searchText} onChange={(e)=> setSearchText(e.target.value)}/>
-<button onClick={(()=>{
+<button className="bg-green-400 rounded  m-2 px-1" onClick={(()=>{
     const filteredData = searchItems(itemsList, searchText)
-    setItemsList(filteredData) ;
+    setFilteredItemsList(filteredData) ;
 })}>Search</button>
    </div>
-    <div className="flex justify-evenly flex-wrap">
-        {
-            itemsList.map((item)=>
-            (<ItemsCard key = {item.id} item={item}/>))
-        }
-    </div>
+   {
+    itemsList.length===0? <>
+    <h1>Shimmer ui loading......</h1>
+   </> :
+     <div className="flex justify-evenly flex-wrap">
+     {
+         filteredItemsList.map((item)=>
+         (<ItemsCard key = {item.id} item={item}/>))
+     }
+ </div>
+   }
    </>
   )
 }
 
-export default Body
+export default Body;
