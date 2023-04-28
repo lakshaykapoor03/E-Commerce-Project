@@ -40,7 +40,7 @@ const Body = () => {
     <h1>Shimmer ui loading......</h1>
    </> :
      <div className="flex justify-evenly flex-wrap">
-     {
+     {filteredItemsList.length===0? <h1>No results found...</h1>:
          filteredItemsList.map((item)=>
          (<ItemsCard key = {item.id} item={item}/>))
      }
